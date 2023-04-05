@@ -17,12 +17,21 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('surname');
-            $table->string('nickname');
+            $table->string('nickname')->unique();
+            $table->string('phone_number');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('direction');
             $table->date('birth_date');
+
+            $table->unsignedBigInteger('role_id');
+            $table->foreign('role_id')
+            ->references('id')
+            ->on('roles')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
             $table->rememberToken();
             $table->timestamps();
         });
