@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('rules');
 
-            $table->unsignedBigInteger('game_id');
+            $table->unsignedBigInteger('game_id')->nullable();
             $table->foreign('game_id')
             ->references('id')
             ->on('games')

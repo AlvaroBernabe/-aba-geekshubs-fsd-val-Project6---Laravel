@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('genre');
             $table->string('platform');
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')
             ->references('id')
             ->on('users')
