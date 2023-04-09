@@ -59,11 +59,9 @@ class AuthController extends Controller
                 'email' => 'required|string',
                 'password' => 'required|string',
             ]);
-
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
-
             $user = User::query()->where('email', $request['email'])->first();
             // Validamos si el usuario existe
             if (!$user) {
@@ -76,22 +74,18 @@ class AuthController extends Controller
             if (!Hash::check($request['password'], $user->password)) {
                 return response(["success" => true, "message" => "Email or password are invalid"], Response::HTTP_NOT_FOUND);
             }
-
             $token = $user->createToken('apiToken')->plainTextToken;
-
             $res = [
                 "success" => true,
                 "message" => "User logged successfully",
                 "token" => $token
             ];
-
             return response()->json(
                 $res,
                 Response::HTTP_ACCEPTED
             );
         } catch (\Throwable $th) {
             Log::error("Login error: " . $th->getMessage());
-
             return response()->json(
                 [
                     "success" => false,
@@ -110,7 +104,6 @@ class AuthController extends Controller
             $token = PersonalAccessToken::findToken($accessToken);
             // Revoke token
             $token->delete();
-
             return response(
                 [
                     "success" => true,
