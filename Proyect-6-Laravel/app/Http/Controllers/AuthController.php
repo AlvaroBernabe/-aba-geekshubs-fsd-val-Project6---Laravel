@@ -20,11 +20,9 @@ class AuthController extends Controller
                 'email' => 'required|string|unique:users,email',
                 'password' => 'required|string|min:6|max:12'
             ]);
-
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
-
             $user = User::create([
                 'name' => $request['name'],
                 'email' => $request['email'],
