@@ -11,55 +11,71 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     
-    // public function profileUpdate(Request $request)
-    // {
-    //     try {
-    //         $validator = Validator::make($request->all(), [
-    //             'name' => 'required|string',
-    //             'surname' => 'required|string',
-    //             'nickname' => 'required|string',
-    //             'phone_number' => 'required|integer',
-    //             'direction' => 'required|string',
-    //             'email' => 'required|string|unique:users,email',
-    //             'age' => 'required|string',
-    //             'password' => 'required|string|min:6|max:12'
-    //         ]);
-    //         if ($validator->fails()) {
-    //             return response()->json($validator->errors(), 400);
-    //         }
-    //         $user = User::create([
-    //             'name' => $request['name'],
-    //             'surname' => $request['surname'],
-    //             'nickname' => $request['nickname'],
-    //             'phone_number' => $request['phone_number'],
-    //             'direction' => $request['direction'],
-    //             'email' => $request['email'],
-    //             'age' => $request['age'],
-    //             'password' => bcrypt($request['password']),
-    //             'role_id' => 2,
-    //         ]);
-    //         $token = $user->createToken('apiToken')->plainTextToken;
-    //         $res = [
-    //             "success" => true,
-    //             "message" => "User registered successfully",
-    //             'data' => $user,
-    //             "token" => $token
-    //         ];
-    //         return response()->json(
-    //             $res,
-    //             Response::HTTP_CREATED
-    //         );
-    //     } catch (\Throwable $th) {
-    //         Log::error("Update Profile error: " . $th->getMessage());
-    //         return response()->json(
-    //             [
-    //                 "success" => false,
-    //                 "message" => "Register error"
-    //             ],
-    //             Response::HTTP_INTERNAL_SERVER_ERROR
-    //         );
-    //     }
-    // }
+    public function updateprofile(Request $request, $id){
+    {
+            try {
+                $validator = Validator::make($request->all(), [
+                    'name' => 'regex:/^[A-Za-z0-9]+$/',
+                    'surname' => 'required|string',
+                    'nickname' => 'required|string',
+                    'phone_number' => 'required|integer',
+                    'direction' => 'required|string',
+                    'age' => 'required|string',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 400);
+                }
+                $user = User::find($id);
+                if (!$user) {
+                    return response()->json(
+                        [
+                            "success" => true,
+                            "message" => "User doesn't exists",
+                        ],
+                        404
+                    );
+                }
+                
+            $name = $request->input('name');
+            $surname = $request->input('surname');
+            $nickname = $request->input('nickname');
+            $phone_number = $request->input('phone_number');
+            $direction = $request->input('direction');
+            $age = $request->input('age');
+            
+
+            if (isset($name, $surname, $nickname, $phone_number, $direction, $age)) {
+                $user->name = $name;
+                $user->surname = $surname;
+                $user->nickname = $nickname;
+                $user->phone_number = $phone_number;
+                $user->direction = $direction;
+                $user->age = $age;
+            }
+
+            $user->save();
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Profile Updated Correctly",
+                    "data" => $user
+                ],
+                200
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Update Profile error: " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Update Profile error"
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+}
 
 
     public function myProfile()
@@ -74,6 +90,7 @@ class UserController extends Controller
                 ],
                 Response::HTTP_OK
             );
+            
         } catch (\Throwable $th) {
             Log::error("Get my Profile error: " . $th->getMessage());
             return response()->json(
