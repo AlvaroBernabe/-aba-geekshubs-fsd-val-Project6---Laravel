@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 
+use function PHPUnit\Framework\isNull;
+
 class UserController extends Controller
 {
 
@@ -19,16 +21,16 @@ class UserController extends Controller
                 $id = auth()->user()->id;
                 $id2 = DB::table('users')->where('id', '=', $id)->get();
 
-                $validator = Validator::make($request->all(), [
-                    'name' => 'regex:/^[A-Za-z0-9]+$/',
-                    'surname' => 'required|string',
-                    'nickname' => 'required|string',
-                    'phone_number' => 'required|integer',
-                    'direction' => 'required|string',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json($validator->errors(), 400);
-                }
+                // $validator = Validator::make($request->all(), [
+                //     'name' => 'regex:/^[A-Za-z0-9]+$/',
+                //     'surname' => 'required|string',
+                //     'nickname' => 'required|string',
+                //     'phone_number' => 'required|integer',
+                //     'direction' => 'required|string',
+                // ]);
+                // if ($validator->fails()) {
+                //     return response()->json($validator->errors(), 400);
+                // }
                 $user = User::find($id);
                 if (!$id2) {
                     return response()->json(
@@ -47,7 +49,7 @@ class UserController extends Controller
             $direction = $request->input('direction');
             $age = $request->input('age');
 
-            if (isset($name, $surname, $nickname, $phone_number, $direction, $age)) {
+            if (isNull($name, $surname, $nickname, $phone_number, $direction, $age)) {
                 $user->name = $name;
                 $user->surname = $surname;
                 $user->nickname = $nickname;
@@ -55,9 +57,7 @@ class UserController extends Controller
                 $user->direction = $direction;
                 $user->age = $age;
             }
-
             $user->save();
-
             return response()->json(
                 [
                     "success" => true,
