@@ -14,25 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
         // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $this->call([
-            RoleSeeder::class,
-        ]);
-        $this->call([
-            UserSeeder::class,
-        ]);
-        $this->call([
-            GameSeeder::class,
-        ]);
-        $this->call([
-            PartySeeder::class,
-        ]);
-
-    }
+            //     'name' => 'Test User',
+            //     'email' => 'test@example.com',
+            // ]);
+            
+            $this->call([
+                RoleSeeder::class,
+                UserSeeder::class,
+                GameSeeder::class,
+                PartySeeder::class,
+            ]);
+            \App\Models\User::factory(10)->create();
+            \App\Models\Message::factory(40)->create();
+        }
 }

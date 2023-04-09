@@ -18,14 +18,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('genre');
             $table->string('platform');
-
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')
-            ->references('id')
-            ->on('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-
             $table->timestamps();
         });
     }
