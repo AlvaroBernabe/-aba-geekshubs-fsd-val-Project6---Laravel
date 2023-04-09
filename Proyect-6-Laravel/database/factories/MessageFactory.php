@@ -17,9 +17,9 @@ class MessageFactory extends Factory
     public function definition()
     {
         return [
-            'comments' => $this->fake()->sentence(),
-            'user_id' => $this->rand(1,3) ->unique(),
-            'party_id' => $this->rand(1,4) ->party_id(),
+            'comments' => fake()->sentence(),
+            'user_id' => rand(1,3),
+            'party_id' => rand(1,4),
         ];
     }
 }
