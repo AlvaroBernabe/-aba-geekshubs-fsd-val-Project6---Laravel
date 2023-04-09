@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-
+            $table->longText('comments');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
