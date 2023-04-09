@@ -17,10 +17,6 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
-                'surname' => 'required|string',
-                'nickname' => 'required|string',
-                'phone_number' => 'required|integer',
-                'direction' => 'required|string',
                 'email' => 'required|string|unique:users,email',
                 'password' => 'required|string|min:6|max:12'
             ]);
@@ -31,12 +27,7 @@ class AuthController extends Controller
 
             $user = User::create([
                 'name' => $request['name'],
-                'surname' => $request['surname'],
-                'nickname' => $request['nickname'],
-                'phone_number' => $request['phone_number'],
-                'direction' => $request['direction'],
                 'email' => $request['email'],
-                'age' => $request['age'],
                 'password' => bcrypt($request['password']),
                 'role_id' => 2,
             ]);
@@ -131,7 +122,6 @@ class AuthController extends Controller
             );
         } catch (\Throwable $th) {
             Log::error("Logout error: " . $th->getMessage());
-
             return response()->json(
                 [
                     "success" => false,
@@ -140,19 +130,5 @@ class AuthController extends Controller
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
-    }
-
-    public function profile()
-    {
-        $user = auth()->user();
-
-        return response(
-            [
-                "success" => true,
-                "message" => "User profile get succsessfully",
-                "data" => $user
-            ],
-            Response::HTTP_OK
-        );
     }
 }

@@ -18,7 +18,7 @@ class MessageFactory extends Factory
     {
         return [
             'comments' => fake()->sentence(),
-            'user_id' => rand(1,3),
+            'user_id' => rand(1,13),
             'party_id' => rand(1,4),
         ];
     }
