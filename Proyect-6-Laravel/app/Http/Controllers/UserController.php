@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
@@ -21,16 +22,16 @@ class UserController extends Controller
                 $id = auth()->user()->id;
                 $id2 = DB::table('users')->where('id', '=', $id)->get();
 
-                // $validator = Validator::make($request->all(), [
-                //     'name' => 'regex:/^[A-Za-z0-9]+$/',
-                //     'surname' => 'required|string',
-                //     'nickname' => 'required|string',
-                //     'phone_number' => 'required|integer',
-                //     'direction' => 'required|string',
-                // ]);
-                // if ($validator->fails()) {
-                //     return response()->json($validator->errors(), 400);
-                // }
+                $validator = Validator::make($request->all(), [
+                    'name' => 'regex:/^[A-Za-z0-9]+$/',
+                    'surname' => 'string',
+                    'nickname' => 'string',
+                    'phone_number' => 'integer',
+                    'direction' => 'string',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 400);
+                }
                 $user = User::find($id);
                 if (!$id2) {
                     return response()->json(
@@ -104,4 +105,41 @@ class UserController extends Controller
             );
         }
     }
+
+    public function createComment(Request $request)
+    {
+        try {
+            $party_id = $request->input('party_id');
+            $userId = auth()->user()->id;
+            $comments = $request->input('comments');
+
+            $newMessage = new Message();
+            $newMessage->party_id = $party_id;
+            $newMessage->user_id = $userId;
+            $newMessage->comments = $comments;
+            $newMessage->save();
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Review Created",
+                    "data" => $newMessage
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            Log::error("Creating Review Error: " . $th->getMessage());
+
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Error creating Review"
+                ],
+                500
+            );
+        }
+    }
+
+
+
 }

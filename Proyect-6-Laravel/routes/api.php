@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // AuthController
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 // Is Admin
 Route::group([
@@ -23,7 +24,8 @@ Route::group([
 // User Controller
 Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'myProfile']);
 Route::middleware('auth:sanctum')->put('/profile/update', [UserController::class, 'updateprofile']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/comments/create', [UserController::class, 'createComment']);
+
 
 
 //Test
