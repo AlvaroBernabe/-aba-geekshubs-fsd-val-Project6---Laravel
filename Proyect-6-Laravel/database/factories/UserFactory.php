@@ -19,12 +19,14 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'surname' => fake()->surname(),
-            'nickname' => fake()->nickname()->unique(),
-            'phone_number' => fake()->phone_number(),
-            'direction' => fake()->direction(),
-            'role_id' => fake()->role_id(2),
-            'birth_date' => fake()->birth_date(),
+            'surname' => fake(),
+            'nickname' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' =>(encrypt('123456')),
+            'phone_number' => fake()->phoneNumber(),
+            'direction' => fake()->address(),
+            // 'role_id' => '2',
+            // 'birth_date' => fake()->date(),
         ];
     }
 
