@@ -24,7 +24,7 @@ class IsAdmin
             $role = $user->role_id;
             if ($role != 1) {
                 return response()->json([
-                    'success' => false,
+                    'success' => true,
                     'message' => "Unauthorized"
                 ]);
             }

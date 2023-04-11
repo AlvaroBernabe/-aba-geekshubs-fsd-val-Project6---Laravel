@@ -195,4 +195,68 @@ class UserController extends Controller
     }
 
 
+
+        public function deleteUserById(Request $request, $id)
+    {
+        try {
+
+        //     // $id = auth()->user()->id;
+        //     $id2 = DB::table('users')->where('role_id', '=', 1)->get('role_id', '=', 1);
+        //     // $userId = auth()->user();
+        //     // $user = User::find($userId);
+        //     $id2 = [
+        //         'array' => 'integer'
+        //         ];
+        //     $test = (int)$id2;
+        // //     if (sayHello() === FALSE)
+        // //     echo "Function Failed";
+        // // else
+        // //     echo "Function Worked";
+        // //     User::destroy($id) 
+
+        //             if($test != 1) {
+        //                 return response()->json([
+        //                     'success' => true,
+        //                     'message' => "You cant delete Yourself",
+        //                     "message" => $test . "esto es test"
+        //                 ]);
+        //               } else {
+        //                 User::destroy($id);
+        //                 }
+        //     return response()->json(
+        //         [
+        //             "success" => true,
+        //             "message" => "User Deleted",
+        //             "message" => $test . "esto es test"
+        //         ],
+        //         200
+        //     );
+
+        $user = User::find($id);
+        if ($user->role_id != 1) {
+            User::destroy($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'User successfully deleted',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin profiles cannot be deleted'
+            ], 400);
+        }
+
+
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage() 
+                ],
+                500
+            );
+        }
+    }
+
+
 }

@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'myPr
 Route::middleware('auth:sanctum')->put('/profile/update', [UserController::class, 'updateprofile']);
 Route::middleware('auth:sanctum')->post('/comments/create', [UserController::class, 'createComment']);
 Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class, 'getMyMessages']);
+
 Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all', [UserController::class, 'getAllUsers']);
-
-
+Route::middleware('auth:sanctum', 'isAdmin')->delete('/users/all/destroy/{id}', [UserController::class, 'deleteUserById']);
 
 
 //Test
