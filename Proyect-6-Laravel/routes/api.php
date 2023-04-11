@@ -29,8 +29,6 @@ Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class,
 
 
 
-
-
 //Test
 Route::get('/welcome', function () {
     return view('welcome');

@@ -21,7 +21,6 @@ class UserController extends Controller
             try {
                 $id = auth()->user()->id;
                 $id2 = DB::table('users')->where('id', '=', $id)->get();
-
                 $validator = Validator::make($request->all(), [
                     'name' => 'regex:/^[A-Za-z0-9]+$/',
                     'surname' => 'string',
@@ -42,14 +41,12 @@ class UserController extends Controller
                         404
                     );
                 }
-
             $name = $request->input('name');
             $surname = $request->input('surname');
             $nickname = $request->input('nickname');
             $phone_number = $request->input('phone_number');
             $direction = $request->input('direction');
             $age = $request->input('age');
-
             if (isNull($name, $surname, $nickname, $phone_number, $direction, $age)) {
                 $user->name = $name;
                 $user->surname = $surname;
@@ -67,7 +64,6 @@ class UserController extends Controller
                 ],
                 200
             );
-
             } catch (\Throwable $th) {
                 Log::error("Update Profile error: " . $th->getMessage());
                 return response()->json(
@@ -85,6 +81,7 @@ class UserController extends Controller
     {
         try {
             $user = auth()->user();
+
             return response(
                 [
                     "success" => true,
@@ -93,7 +90,6 @@ class UserController extends Controller
                 ],
                 Response::HTTP_OK
             );
-
         } catch (\Throwable $th) {
             Log::error("Get my Profile error: " . $th->getMessage());
             return response()->json(
@@ -146,22 +142,22 @@ class UserController extends Controller
         try {
             $id = auth()->user()->id;
             $message = DB::table('messages')->where('user_id', '=', $id)->get();
-
-            $message->user_id = $user_id;
-            $message->comments = $comments;
-            $message->party_id = $party_id;
+            // $message->user_id = $user_id;
+            // $message->comments = $comments;
+            // $message->party_id = $party_id;
             $message->save();
-
             return response()->json(
                 [
                     "success" => true,
-                    "message" => "Pizza deleted" . $message,
-                    "data" => [
-                        'id' => $message->id,
-                        'user_id' => $message->user_id,
-                        'comments' => $message->comments,
-                        'party_id' => $message->party_id,
-                    ]
+                    "message" => "Estos son todos sus deleted" . $message,
+                    "data" => $message
+                    // "data" => [
+                    //     $message
+                    //     // 'id' => $message->id,
+                    //     // 'user_id' => $message->user_id,
+                    //     // 'comments' => $message->comments,
+                    //     // 'party_id' => $message->party_id,
+                    // ]
                 ],
                 200
             );
