@@ -173,4 +173,26 @@ class UserController extends Controller
     }
 
 
+
+
+    public function getAllUsers()
+    {
+        try {
+            $users = User::query()->get();
+            return [
+                "success" => true,
+                "data" => $users
+            ];
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage() . $users
+                ],
+                500
+            );
+        }
+    }
+
+
 }
