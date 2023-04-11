@@ -25,6 +25,9 @@ Route::group([
 Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'myProfile']);
 Route::middleware('auth:sanctum')->put('/profile/update', [UserController::class, 'updateprofile']);
 Route::middleware('auth:sanctum')->post('/comments/create', [UserController::class, 'createComment']);
+Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class, 'getMyMessages']);
+
+
 
 
 

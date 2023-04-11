@@ -141,5 +141,40 @@ class UserController extends Controller
     }
 
 
+    public function getMyMessages()
+    {
+        try {
+            $id = auth()->user()->id;
+            $message = DB::table('messages')->where('user_id', '=', $id)->get();
+
+            $message->user_id = $user_id;
+            $message->comments = $comments;
+            $message->party_id = $party_id;
+            $message->save();
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Pizza deleted" . $message,
+                    "data" => [
+                        'id' => $message->id,
+                        'user_id' => $message->user_id,
+                        'comments' => $message->comments,
+                        'party_id' => $message->party_id,
+                    ]
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage() . $message
+                ],
+                500
+            );
+        }
+    }
+
 
 }
