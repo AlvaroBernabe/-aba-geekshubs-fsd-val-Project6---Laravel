@@ -105,16 +105,23 @@ class UserController extends Controller
     public function createComment(Request $request)
     {
         try {
-            $party_id = $request->input('party_id');
-            $userId = auth()->user()->id;
-            $comments = $request->input('comments');
 
+            $validator = Validator::make($request->all(), [
+                'comments' => 'string',
+                'party_id' => 'integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $userId = auth()->user()->id;
+            $party_id = $request->input('party_id');
+            $comments = $request->input('comments');
             $newMessage = new Message();
             $newMessage->party_id = $party_id;
             $newMessage->user_id = $userId;
             $newMessage->comments = $comments;
             $newMessage->save();
-
             return response()->json(
                 [
                     "success" => true,
@@ -125,7 +132,6 @@ class UserController extends Controller
             );
         } catch (\Throwable $th) {
             Log::error("Creating Review Error: " . $th->getMessage());
-
             return response()->json(
                 [
                     "success" => false,
@@ -145,18 +151,17 @@ class UserController extends Controller
             // $message->user_id = $user_id;
             // $message->comments = $comments;
             // $message->party_id = $party_id;
-            $message->save();
+            // $message->save();
             return response()->json(
                 [
                     "success" => true,
-                    "message" => "Estos son todos sus deleted" . $message,
+                    "message" => "Estos son todos sus mensajes",
                     "data" => $message
                     // "data" => [
-                    //     $message
-                    //     // 'id' => $message->id,
-                    //     // 'user_id' => $message->user_id,
-                    //     // 'comments' => $message->comments,
-                    //     // 'party_id' => $message->party_id,
+                    //     'id' => $message->data->id,
+                    //     'user_id' => $message->data->user_id,
+                    //     'comments' => $message->data->comments,
+                    //     'party_id' => $message->data->party_id,
                     // ]
                 ],
                 200
@@ -194,12 +199,40 @@ class UserController extends Controller
         }
     }
 
-
+    public function getUserDetailsById(Request $request, $id)
+    {
+        try {
+            $users = User::query()->find($id);
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "User Details",
+                    "data" => [
+                        'id' => $users->id,
+                        'name' => $users->name,
+                        'surname' => $users->surname,
+                        'nickname' => $users->nickname,
+                        'phone_number' => $users->phone_number,
+                        'direction' => $users->direction,
+                        'age' => $users->age,
+                    ]
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
 
         public function deleteUserById(Request $request, $id)
     {
         try {
-
         //     // $id = auth()->user()->id;
         //     $id2 = DB::table('users')->where('role_id', '=', 1)->get('role_id', '=', 1);
         //     // $userId = auth()->user();
@@ -242,7 +275,7 @@ class UserController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Admin profiles cannot be deleted'
+                'message' => 'You cant delete Yourself or Other Admin'
             ], 400);
         }
 
@@ -257,6 +290,52 @@ class UserController extends Controller
             );
         }
     }
+
+
+
+
+    public function updateMessaggesByIdAdmin(Request $request, $id){
+        {
+                try {
+                    // $id2 = DB::table('users')->where('id', '=', $id)->get();
+                    $validator = Validator::make($request->all(), [
+                        'comments' => 'string',
+                        'party_id' => 'integer',
+                    ]);
+                    if ($validator->fails()) {
+                        return response()->json($validator->errors(), 400);
+                    }
+                // $message = DB::table('messages')->where('id', '=', $id)->get();
+
+                $comments = $request->input('comments');
+                $party_id = $request->input('party_id');
+                $message = Message::find($id);
+                
+                if (isNull($comments, $party_id)) {
+                    $message->comments = $comments;
+                    $message->party_id = $party_id;
+                }
+                $message->save();
+                return response()->json(
+                    [
+                        "success" => true,
+                        "message" => "Profile Updated Correctly",
+                        "data" => $message
+                    ],
+                    200
+                );
+                } catch (\Throwable $th) {
+                    Log::error("Update Profile error: " . $th->getMessage());
+                    return response()->json(
+                        [
+                            "success" => false,
+                            "message" => "Update Profile error ". ($message)
+                        ],
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+            }
+        }
 
 
 }
