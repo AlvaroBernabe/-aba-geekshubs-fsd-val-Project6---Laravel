@@ -43,7 +43,7 @@ class GameController extends Controller
         }
     }
 
-    public function updateGame(Request $request, $id)
+    public function updateGameId(Request $request, $id)
     {
         try {
             Log::info("Update Game by Id Admin Working");
@@ -67,6 +67,27 @@ class GameController extends Controller
             );
         } catch (\Throwable $th) {
             Log::error("Update Game by Id Admin  Error: " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getAllGames()
+    {
+        try {
+            Log::info("Get All Games Working");
+            $games = Game::query()->get();
+            return [
+                "success" => true,
+                "data" => $games
+            ];
+        } catch (\Throwable $th) {
+            Log::error("Get All Games Error: " . $th->getMessage());
             return response()->json(
                 [
                     "success" => false,

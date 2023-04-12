@@ -19,7 +19,7 @@ class MessageController extends Controller
     {
         try {
             Log::info("Get All Messages Working");
-            $messages = Message::query()->get;
+            $messages = Message::query()->get();
             return [
                 "success" => true,
                 "data" => $messages
