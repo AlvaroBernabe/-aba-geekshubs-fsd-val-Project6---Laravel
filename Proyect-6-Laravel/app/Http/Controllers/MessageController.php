@@ -187,89 +187,88 @@ class MessageController extends Controller
     }
 
     public function updateMessaggesByIdAdmin(Request $request, $id)
-    { {
-            try {
-                Log::info("Update Message By Id Admin Working");
-                $validator = Validator::make($request->all(), [
-                    'comments' => 'string',
-                    'party_id' => 'integer',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json($validator->errors(), 400);
-                }
-                $comments = $request->input('comments');
-                $party_id = $request->input('party_id');
-                $message = Message::find($id);
-                if (isNull($comments, $party_id)) {
-                    $message->comments = $comments;
-                    $message->party_id = $party_id;
-                }
+    {
+        try {
+            Log::info("Update Message By Id Admin Working");
+            $validator = Validator::make($request->all(), [
+                'comments' => 'string',
+                'party_id' => 'integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+            $comments = $request->input('comments');
+            $party_id = $request->input('party_id');
+            $message = Message::find($id);
+            if (isNull($comments, $party_id)) {
+                $message->comments = $comments;
+                $message->party_id = $party_id;
+            }
+            $message->save();
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Profile Updated Correctly",
+                    "data" => $message
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            Log::error("Update Message By Id Admin Error: " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+
+    public function updateUserMessageById(Request $request, $id)
+    {
+        try {
+            Log::info("Update User Message By Id Working");
+            $validator = Validator::make($request->all(), [
+                'comments' => 'string',
+                'party_id' => 'integer',
+            ]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+            $comments = $request->input('comments');
+            $party_id = $request->input('party_id');
+            $message = Message::find($id);
+            $myId = auth()->user()->id;
+            $user = User::find($myId);
+            if ($user->id == $message->user_id) {
+                $message->comments = $comments;
+                $message->party_id = $party_id;
                 $message->save();
                 return response()->json(
                     [
                         "success" => true,
-                        "message" => "Profile Updated Correctly",
+                        "message" => "Message Updated Correctly",
                         "data" => $message
                     ],
                     200
                 );
-            } catch (\Throwable $th) {
-                Log::error("Update Message By Id Admin Error: " . $th->getMessage());
-                return response()->json(
-                    [
-                        "success" => false,
-                        "message" => $th->getMessage()
-                    ],
-                    500
-                );
-            }
-        }
-    }
-
-    public function updateUserMessageById(Request $request, $id)
-    { {
-            try {
-                Log::info("Update User Message By Id Working");
-                $validator = Validator::make($request->all(), [
-                    'comments' => 'string',
-                    'party_id' => 'integer',
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'message' => "You cant update Other People Messages ",
                 ]);
-                if ($validator->fails()) {
-                    return response()->json($validator->errors(), 400);
-                }
-                $comments = $request->input('comments');
-                $party_id = $request->input('party_id');
-                $message = Message::find($id);
-                $myId = auth()->user()->id;
-                $user = User::find($myId);
-                if ($user->id == $message->user_id) {
-                    $message->comments = $comments;
-                    $message->party_id = $party_id;
-                    $message->save();
-                    return response()->json(
-                        [
-                            "success" => true,
-                            "message" => "Message Updated Correctly",
-                            "data" => $message
-                        ],
-                        200
-                    );
-                } else {
-                    return response()->json([
-                        'success' => true,
-                        'message' => "You cant update Other People Messages ",
-                    ]);
-                }
-            } catch (\Throwable $th) {
-                Log::error("Update User Message By Id error: " . $th->getMessage());
-                return response()->json(
-                    [
-                        "success" => false,
-                        "message" => "Update User Message By Id error "
-                    ],
-                    500
-                );
             }
+        } catch (\Throwable $th) {
+            Log::error("Update User Message By Id error: " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Update User Message By Id error "
+                ],
+                500
+            );
         }
     }
 }

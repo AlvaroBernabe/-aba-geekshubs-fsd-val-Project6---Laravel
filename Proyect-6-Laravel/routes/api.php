@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyContro
 
 //Game Controller
 Route::middleware('auth:sanctum', 'isAdmin')->post('/game/create', [GameController::class, 'newGame']);
+Route::middleware('auth:sanctum', 'isAdmin')->put('/game/update/{id}', [GameController::class, 'updateGame']);
 
 
 
