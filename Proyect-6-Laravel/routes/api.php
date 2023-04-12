@@ -45,7 +45,7 @@ Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyContro
 Route::middleware('auth:sanctum')->get('/party/view/{id}', [PartyController::class, 'getPartyById']);
 
 Route::middleware('auth:sanctum')->post('/party/join/', [PartyController::class, 'joinParty']);
-
+Route::middleware('auth:sanctum')->delete('/party/leave/{id}', [PartyController::class, 'leaveParty']);
 
 
 //Test

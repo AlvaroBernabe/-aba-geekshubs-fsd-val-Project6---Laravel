@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Party;
+use App\Models\Party_User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -112,10 +113,50 @@ class PartyController extends Controller
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "NOT Joined to Party"
+                    "message" => "The party does not Exist"
                 ],
                 500
             );
         }
     }
+
+
+    public function leaveParty(Request $request, $id)
+    {
+        try {
+            $myId = auth()->user()->id;
+            $user = User::find($myId);
+            $userID = $user->id;
+
+            $partyLeave= DB::table('party_user')->where('id', '=', $id)->find($id);
+            $party_userID = $partyLeave->user_id;
+            if ($party_userID == $userID) {
+                // Party_User::destroy($id);
+                echo($userID.'hola mundo');
+                $partyDelete= DB::table('party_user')->where('id', '=', $id)->delete($id);
+                $partyDelete;
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => 'sucessfully exited the party',
+                // ], 200);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'message' => "You are not in the party",
+                ]);
+            }
+        } catch (\Throwable $th) {
+            Log::error("Error Leaving the Party " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    // "message" => "NOT Exited the party",
+                    "message" => $userID
+                ],
+                500
+            );
+        }
+    }
+
+
 }
