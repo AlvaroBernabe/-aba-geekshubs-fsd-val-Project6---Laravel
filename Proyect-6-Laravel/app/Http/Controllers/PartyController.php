@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Party;
-use App\Models\Party_User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class PartyController extends Controller
 {
@@ -17,16 +15,15 @@ class PartyController extends Controller
     public function createParty(Request $request)
     {
         try {
+            Log::info("Creating Party Working");
             $game_id = $request->input('game_id');
             $rules = $request->input('rules');
             $name = $request->input('name');
-
             $newParty = new Party();
             $newParty->game_id = $game_id;
             $newParty->name = $name;
             $newParty->rules = $rules;
             $newParty->save();
-
             return response()->json(
                 [
                     "success" => true,
@@ -36,11 +33,11 @@ class PartyController extends Controller
                 200
             );
         } catch (\Throwable $th) {
-            Log::error("Creating Party Error: " . $th->getMessage());
+            Log::error("Creating Party error: " . $th->getMessage());
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "Error creating Party" . $newParty
+                    "message" => $th->getMessage()
                 ],
                 500
             );
@@ -52,6 +49,7 @@ class PartyController extends Controller
     public function getPartyById(Request $request, $id)
     {
         try {
+            Log::info("Get Party By Id Working");
             $party = Party::query()->find($id);
             $gameId = $party->game_id;
             $gameData = Game::query()->find($gameId);
@@ -71,6 +69,7 @@ class PartyController extends Controller
                 200
             );
         } catch (\Throwable $th) {
+            Log::error("Get Party By Id Error: " . $th->getMessage());
             return response()->json(
                 [
                     "success" => false,
@@ -81,10 +80,10 @@ class PartyController extends Controller
         }
     }
 
-
     public function joinParty(Request $request)
     {
         try {
+            Log::info("Join Party Working");
             $party_id = $request->input('party_id');
             $myId = auth()->user()->id;
             $user = User::find($myId);
@@ -109,36 +108,30 @@ class PartyController extends Controller
                 ], 200);
             }
         } catch (\Throwable $th) {
-            Log::error("Error Joining to Party " . $th->getMessage());
+            Log::error("Join Party error: " . $th->getMessage());
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "The party does not Exist"
+                    "message" => $th->getMessage()
                 ],
                 500
             );
         }
     }
 
-
     public function leaveParty(Request $request, $id)
     {
         try {
+            Log::info("Leave Party Working");
             $myId = auth()->user()->id;
             $user = User::find($myId);
             $userID = $user->id;
-
             $partyLeave= DB::table('party_user')->where('id', '=', $id)->find($id);
             $party_userID = $partyLeave->user_id;
             if ($party_userID == $userID) {
-                // Party_User::destroy($id);
                 echo($userID.'hola mundo');
                 $partyDelete= DB::table('party_user')->where('id', '=', $id)->delete($id);
                 $partyDelete;
-                // return response()->json([
-                //     'success' => true,
-                //     'message' => 'sucessfully exited the party',
-                // ], 200);
             } else {
                 return response()->json([
                     'success' => true,
@@ -146,17 +139,15 @@ class PartyController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
-            Log::error("Error Leaving the Party " . $th->getMessage());
+            Log::error("Leave Party error: " . $th->getMessage());
             return response()->json(
                 [
                     "success" => false,
-                    // "message" => "NOT Exited the party",
-                    "message" => $userID
+                    "message" => $th->getMessage()
                 ],
                 500
             );
         }
     }
-
 
 }
