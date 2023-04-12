@@ -44,4 +44,37 @@ class PartyController extends Controller
     }
 
 
+    
+    public function getPartyById(Request $request, $id)
+    {
+        try {
+            $party = Party::query()->find($id);
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Party Details",
+                    "data" => [
+                        'id' => $party->id,
+                        'name' => $party->name,
+                        'rules' => $party->rules,
+                        'game_id' => $party->game_id,
+                    ]
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+
+
+
+
 }
