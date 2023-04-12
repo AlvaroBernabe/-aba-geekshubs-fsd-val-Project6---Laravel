@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use App\Models\Party;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -49,6 +50,9 @@ class PartyController extends Controller
     {
         try {
             $party = Party::query()->find($id);
+            $gameId = $party->game_id;
+            $gameData = Game::query()->find($gameId);
+            $gameTitle = $gameData->title;
             return response()->json(
                 [
                     "success" => true,
@@ -57,6 +61,7 @@ class PartyController extends Controller
                         'id' => $party->id,
                         'name' => $party->name,
                         'rules' => $party->rules,
+                        'Title of Game' => $gameTitle,
                         'game_id' => $party->game_id,
                     ]
                 ],
