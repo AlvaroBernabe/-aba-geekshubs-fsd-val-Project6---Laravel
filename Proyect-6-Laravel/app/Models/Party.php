@@ -10,6 +10,15 @@ class Party extends Model
     use HasFactory;
 
 
+    // protected $fillable = [
+    //     'name',
+    //     'rules',
+    //     'game_id'
+    // ];
+
+
+
+
     public function games()
     {
         return $this->hasOne(Game::class);

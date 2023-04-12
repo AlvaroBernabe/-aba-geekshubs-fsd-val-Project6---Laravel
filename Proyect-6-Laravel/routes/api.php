@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PartyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,9 @@ Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all', [UserController:
 Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all/details/{id}', [UserController::class, 'getUserDetailsById']);
 Route::middleware('auth:sanctum', 'isAdmin')->delete('/users/all/destroy/{id}', [UserController::class, 'deleteUserById']);
 
+
+//Party Controller
+Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyController::class, 'createParty']);
 
 //Test
 Route::get('/welcome', function () {
