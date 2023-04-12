@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'myPr
 Route::middleware('auth:sanctum')->put('/profile/update', [UserController::class, 'updateprofile']);
 Route::middleware('auth:sanctum')->post('/comments/create', [UserController::class, 'createComment']);
 Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class, 'getMyMessages']);
+Route::middleware('auth:sanctum')->get('/comments/party/{id}', [UserController::class, 'getMessagesByPartyId']);
 Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [UserController::class, 'updateMessaggesByIdAdmin']);
 
 

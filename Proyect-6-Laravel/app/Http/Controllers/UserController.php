@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use App\Models\Message;
+use App\Models\Party;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
@@ -176,6 +178,51 @@ class UserController extends Controller
             );
         }
     }
+
+    public function getMessagesByPartyId($id)
+    {
+        try {
+            $message = DB::table('messages')->where('party_id', '=', $id)->get();
+            // $messageUsername = $message->user_id;
+            // $messageUsername = $message['id']->get();
+            // $messageUsername = $message->first()->get();
+            // $messageContent = $message->comments;
+            // $message = Message::query()->where('party_id', $id);
+            // $userID = $message->user_id;
+            $party = Party::query()->find($id);
+            $gameId = $party->game_id;
+            $partyName = $party->name;
+            $gameId = $party->game_id;
+            // $gameData = DB::table('games')->where('id', '=', $gameId)->get();
+            $gameData = Game::query()->find($gameId);
+            $gameTitle = $gameData->title;
+            // $UserName = DB::table('users')->where('id', '=', $message->user_id)->get();
+            // $userData = User::query()->fing($userID);
+            // $userNick = $userData->nickname;
+            // $gameName = $gameData->title;
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Message of Games Id",
+                    "data" => [
+                        'Title of Game' => $gameTitle,
+                        // 'User Name' => $userNick,
+                        'Message' =>  $message
+                        ]
+                    ],
+                    200
+                );
+            } catch (\Throwable $th) {
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => $th->getMessage().'testo es esto'.$message
+                    ],
+                    500
+                );
+            }
+        }
 
 
 
