@@ -53,13 +53,18 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->hasOne(Role::class);
+        return $this->belongsTo(Role::class);
     }
     public function messages()
     {
-        return $this->belongsToMany(Message::class);
+        return $this->hasMany(Message::class);
     }
     public function parties()
+    {
+        return $this->belongsToMany(Party::class);
+    }
+
+    public function party_user()
     {
         return $this->belongsToMany(Party::class);
     }

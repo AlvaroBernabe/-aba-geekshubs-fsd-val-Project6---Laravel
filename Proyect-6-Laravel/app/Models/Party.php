@@ -19,6 +19,16 @@ class Party extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function party_user()
+    {
+        return $this->belongsToMany(Party::class);
     }
 }

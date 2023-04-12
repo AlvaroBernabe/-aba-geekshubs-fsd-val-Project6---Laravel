@@ -244,6 +244,36 @@ class UserController extends Controller
             }
         }
 
+        
+        public function deleteCommentByIdUser(Request $request, $id)
+        {
+            try {               
+                $myId = auth()->user()->id;
+                $user = User::find($myId);
+                $party = Message::find($id);
+                if ($user->id == $party->user_id) {
+                    Message::where('id', $id)->delete();
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Message successfully deleted',
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'success' => true,
+                        'message' => "You cant delete Other People Messages " .$user ,
+                    ]);
+                }               
+            } catch (\Throwable $th) {
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => $th->getMessage(). $party
+                    ],
+                    500
+                );
+            }
+        }
+
 
     public function getAllUsers()
     {

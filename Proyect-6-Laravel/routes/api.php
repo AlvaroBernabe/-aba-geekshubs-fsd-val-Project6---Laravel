@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->post('/comments/create', [UserController::cla
 Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class, 'getMyMessages']);
 Route::middleware('auth:sanctum')->get('/comments/party/{id}', [UserController::class, 'getMessagesByPartyId']);
 Route::middleware('auth:sanctum', 'isAdmin')->delete('/comments/destroy/{id}', [UserController::class, 'deleteCommentByIdAdmin']);
+Route::middleware('auth:sanctum')->delete('/mycomments/destroy/{id}', [UserController::class, 'deleteCommentByIdUser']);
 Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [UserController::class, 'updateMessaggesByIdAdmin']);
 
 
