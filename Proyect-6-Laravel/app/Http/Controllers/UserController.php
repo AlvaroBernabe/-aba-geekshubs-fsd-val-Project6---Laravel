@@ -225,6 +225,24 @@ class UserController extends Controller
         }
 
 
+        public function deleteCommentByIdAdmin(Request $request, $id)
+        {
+            try {
+            Message::destroy($id);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Message successfully deleted',
+                ], 200);
+            } catch (\Throwable $th) {
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => $th->getMessage() 
+                    ],
+                    500
+                );
+            }
+        }
 
 
     public function getAllUsers()
