@@ -39,8 +39,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 Route::middleware('auth:sanctum', 'isAdmin')->delete('/comments/destroy/{id}', [MessageController::class, 'deleteMessageByIdAdmin']);
 Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [MessageController::class, 'updateMessaggesByIdAdmin']);
-Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/all', [MessageController::class, 'getAllMessages']);
-
+Route::middleware('auth:sanctum', 'isAdmin')->get('/comments/all', [MessageController::class, 'getAllMessages']);
 
 //Party Controller
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -54,6 +53,7 @@ Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyContro
 //Game Controller
 Route::middleware('auth:sanctum', 'isAdmin')->post('/game/create', [GameController::class, 'newGame']);
 Route::middleware('auth:sanctum', 'isAdmin')->put('/game/update/{id}', [GameController::class, 'updateGameId']);
+Route::middleware('auth:sanctum', 'isAdmin')->delete('/game/{id}', [GameController::class, 'deleteGameByIdAdmin']);
 Route::middleware('auth:sanctum')->get('/games/all/', [GameController::class, 'getAllGames']);
 
 
