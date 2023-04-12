@@ -39,7 +39,7 @@ class PartyController extends Controller
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "Error creating Party".$newParty
+                    "message" => "Error creating Party" . $newParty
                 ],
                 500
             );
@@ -47,7 +47,7 @@ class PartyController extends Controller
     }
 
 
-    
+
     public function getPartyById(Request $request, $id)
     {
         try {
@@ -86,20 +86,27 @@ class PartyController extends Controller
         try {
             $party_id = $request->input('party_id');
             $myId = auth()->user()->id;
-            $partyJoin = DB::table('party_user')->insert(
-                [
-                    'party_id' => $party_id,
-                    'user_id' => $myId,
-                ]
+            $user = User::find($myId);
+            $party = Party::find($party_id);
+            $party_userID = $party->users()->find($myId);
+            if ($party_userID && $user) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "You are already in the party",
+                ]);
+            } else {
+                $partyJoin = DB::table('party_user')->insert(
+                    [
+                        'party_id' => $party_id,
+                        'user_id' => $myId,
+                    ]
                 );
-            return response()->json(
-                [
+                return response()->json([
                     "success" => true,
                     "message" => "Joined to Party Correctly",
                     "data" => $partyJoin
-                ],
-                200
-            );
+                ], 200);
+            }
         } catch (\Throwable $th) {
             Log::error("Error Joining to Party " . $th->getMessage());
             return response()->json(
@@ -111,6 +118,4 @@ class PartyController extends Controller
             );
         }
     }
-
-
 }
