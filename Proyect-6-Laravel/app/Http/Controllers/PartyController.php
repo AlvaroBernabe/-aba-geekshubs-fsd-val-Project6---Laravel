@@ -126,11 +126,11 @@ class PartyController extends Controller
             $myId = auth()->user()->id;
             $user = User::find($myId);
             $userID = $user->id;
-            $partyLeave= DB::table('party_user')->where('id', '=', $id)->find($id);
+            $partyLeave = DB::table('party_user')->where('id', '=', $id)->find($id);
             $party_userID = $partyLeave->user_id;
             if ($party_userID == $userID) {
-                echo($userID.'hola mundo');
-                $partyDelete= DB::table('party_user')->where('id', '=', $id)->delete($id);
+                echo ($userID . 'hola mundo');
+                $partyDelete = DB::table('party_user')->where('id', '=', $id)->delete($id);
                 $partyDelete;
             } else {
                 return response()->json([
@@ -149,5 +149,4 @@ class PartyController extends Controller
             );
         }
     }
-
 }

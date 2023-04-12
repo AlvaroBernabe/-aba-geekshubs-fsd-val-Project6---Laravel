@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\UserController;
@@ -46,6 +47,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/party/leave/{id}', [PartyController::class, 'leaveParty']);
 });
 Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyController::class, 'createParty']);
+
+
+//Game Controller
+Route::middleware('auth:sanctum', 'isAdmin')->post('/game/create', [GameController::class, 'newGame']);
+
+
 
 //Test
 Route::get('/welcome', function () {
