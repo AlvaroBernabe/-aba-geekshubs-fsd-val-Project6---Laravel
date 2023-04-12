@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->get('/comments/party/{id}', [UserController::
 Route::middleware('auth:sanctum', 'isAdmin')->delete('/comments/destroy/{id}', [UserController::class, 'deleteCommentByIdAdmin']);
 Route::middleware('auth:sanctum')->delete('/mycomments/destroy/{id}', [UserController::class, 'deleteCommentByIdUser']);
 Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [UserController::class, 'updateMessaggesByIdAdmin']);
+Route::middleware('auth:sanctum')->put('/mycomments/update/{id}', [UserController::class, 'updateMessaggesByIdUser']);
+
 
 
 Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all', [UserController::class, 'getAllUsers']);

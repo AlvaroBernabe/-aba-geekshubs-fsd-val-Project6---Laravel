@@ -260,14 +260,14 @@ class UserController extends Controller
                 } else {
                     return response()->json([
                         'success' => true,
-                        'message' => "You cant delete Other People Messages " .$user ,
+                        'message' => "You cant delete Other People Messages ",
                     ]);
                 }               
             } catch (\Throwable $th) {
                 return response()->json(
                     [
                         "success" => false,
-                        "message" => $th->getMessage(). $party
+                        "message" => $th->getMessage()
                     ],
                     500
                 );
@@ -432,5 +432,48 @@ class UserController extends Controller
             }
         }
 
-
+        public function updateMessaggesByIdUser(Request $request, $id){
+            {
+                    try {
+                        
+                        $validator = Validator::make($request->all(), [
+                            'comments' => 'string',
+                            'party_id' => 'integer',
+                        ]);
+                        if ($validator->fails()) {
+                            return response()->json($validator->errors(), 400);
+                        }
+                    $comments = $request->input('comments');
+                    $party_id = $request->input('party_id');
+                    $message = Message::find($id);
+                    $myId = auth()->user()->id;
+                    $user = User::find($myId);                   
+                    if ($user->id == $message->user_id ) {
+                        $message->comments = $comments;
+                        $message->party_id = $party_id;
+                        $message->save();
+                        return response()->json(
+                            [
+                                "success" => true,
+                                "message" => "Message Updated Correctly",
+                                "data" => $message
+                            ], 200);
+                    } else {
+                        return response()->json([
+                            'success' => true,
+                            'message' => "You cant update Other People Messages ",
+                        ]);
+                    }   
+                    } catch (\Throwable $th) {
+                        Log::error("Delete Message By Id User error: " . $th->getMessage());
+                        return response()->json(
+                            [
+                                "success" => false,
+                                "message" => "Delete Message By Id User error ". ($message)
+                            ],
+                            Response::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+                }
+            }
 }
