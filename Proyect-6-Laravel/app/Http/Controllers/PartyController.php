@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Party;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -79,7 +81,36 @@ class PartyController extends Controller
     }
 
 
-
+    public function joinParty(Request $request)
+    {
+        try {
+            $party_id = $request->input('party_id');
+            $myId = auth()->user()->id;
+            $partyJoin = DB::table('party_user')->insert(
+                [
+                    'party_id' => $party_id,
+                    'user_id' => $myId,
+                ]
+                );
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Joined to Party Correctly",
+                    "data" => $partyJoin
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            Log::error("Error Joining to Party " . $th->getMessage());
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "NOT Joined to Party"
+                ],
+                500
+            );
+        }
+    }
 
 
 }

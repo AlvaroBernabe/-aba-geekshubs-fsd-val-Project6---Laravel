@@ -44,6 +44,9 @@ Route::middleware('auth:sanctum', 'isAdmin')->delete('/users/all/destroy/{id}', 
 Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyController::class, 'createParty']);
 Route::middleware('auth:sanctum')->get('/party/view/{id}', [PartyController::class, 'getPartyById']);
 
+Route::middleware('auth:sanctum')->post('/party/join/', [PartyController::class, 'joinParty']);
+
+
 
 //Test
 Route::get('/welcome', function () {
