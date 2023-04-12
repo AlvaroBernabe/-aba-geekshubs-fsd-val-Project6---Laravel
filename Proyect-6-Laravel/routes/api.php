@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -15,38 +16,36 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-// Is Admin
-// Route::group([
-//     'middleware' => ['auth:sanctum', 'isAdmin']
-// ], function () {
-//     Route::post('/logout', [AuthController::class, 'logout']);
-// });
-
 // User Controller
-Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'myProfile']);
-Route::middleware('auth:sanctum')->put('/profile/update', [UserController::class, 'updateprofile']);
-Route::middleware('auth:sanctum')->post('/comments/create', [UserController::class, 'createComment']);
-Route::middleware('auth:sanctum')->get('/comments/view', [UserController::class, 'getMyMessages']);
-Route::middleware('auth:sanctum')->get('/comments/party/{id}', [UserController::class, 'getMessagesByPartyId']);
-Route::middleware('auth:sanctum', 'isAdmin')->delete('/comments/destroy/{id}', [UserController::class, 'deleteCommentByIdAdmin']);
-Route::middleware('auth:sanctum')->delete('/mycomments/destroy/{id}', [UserController::class, 'deleteCommentByIdUser']);
-Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [UserController::class, 'updateMessaggesByIdAdmin']);
-Route::middleware('auth:sanctum')->put('/mycomments/update/{id}', [UserController::class, 'updateMessaggesByIdUser']);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/profile', [UserController::class, 'myProfile']);
+    Route::put('/profile/update', [UserController::class, 'updateprofile']);
+});
 
+Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
+    Route::get('/users/all', [UserController::class, 'getAllUsers']);
+    Route::get('/users/all/details/{id}', [UserController::class, 'getUserDetailsById']);
+    Route::delete('/users/all/destroy/{id}', [UserController::class, 'deleteUserById']);
+});
 
-
-Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all', [UserController::class, 'getAllUsers']);
-Route::middleware('auth:sanctum', 'isAdmin')->get('/users/all/details/{id}', [UserController::class, 'getUserDetailsById']);
-Route::middleware('auth:sanctum', 'isAdmin')->delete('/users/all/destroy/{id}', [UserController::class, 'deleteUserById']);
-
+//Message Controller
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::post('/comments/create', [MessageController::class, 'newMessage']);
+    Route::get('/mycomments/view', [MessageController::class, 'getMyMessages']);
+    Route::get('/comments/party/{id}', [MessageController::class, 'getMessagesByPartyId']);
+    Route::put('/mycomments/update/{id}', [MessageController::class, 'updateUserMessageById']);
+    Route::delete('/mycomments/destroy/{id}', [MessageController::class, 'deleteMessageByIdUser']);
+});
+Route::middleware('auth:sanctum', 'isAdmin')->delete('/comments/destroy/{id}', [MessageController::class, 'deleteMessageByIdAdmin']);
+Route::middleware('auth:sanctum', 'isAdmin')->put('/comments/update/{id}', [MessageController::class, 'updateMessaggesByIdAdmin']);
 
 //Party Controller
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/party/view/{id}', [PartyController::class, 'getPartyById']);
+    Route::post('/party/join/', [PartyController::class, 'joinParty']);
+    Route::delete('/party/leave/{id}', [PartyController::class, 'leaveParty']);
+});
 Route::middleware('auth:sanctum', 'isAdmin')->post('/party/create', [PartyController::class, 'createParty']);
-Route::middleware('auth:sanctum')->get('/party/view/{id}', [PartyController::class, 'getPartyById']);
-
-Route::middleware('auth:sanctum')->post('/party/join/', [PartyController::class, 'joinParty']);
-Route::middleware('auth:sanctum')->delete('/party/leave/{id}', [PartyController::class, 'leaveParty']);
-
 
 //Test
 Route::get('/welcome', function () {
