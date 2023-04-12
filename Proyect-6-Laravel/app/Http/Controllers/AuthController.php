@@ -15,6 +15,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
+            Log::info("Register User Working");
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'email' => 'required|string|unique:users,email',
@@ -55,6 +56,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+            Log::info("Login User Working");
             $validator = Validator::make($request->all(), [
                 'email' => 'required|string',
                 'password' => 'required|string',
@@ -63,14 +65,12 @@ class AuthController extends Controller
                 return response()->json($validator->errors(), 400);
             }
             $user = User::query()->where('email', $request['email'])->first();
-            // Validamos si el usuario existe
             if (!$user) {
                 return response(
                     ["success" => false, "message" => "Email or password are invalid",],
                     Response::HTTP_NOT_FOUND
                 );
             }
-            // Validamos la contraseña
             if (!Hash::check($request['password'], $user->password)) {
                 return response(["success" => true, "message" => "Email or password are invalid"], Response::HTTP_NOT_FOUND);
             }
@@ -99,10 +99,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
+            Log::info("Logout User Working");
             $accessToken = $request->bearerToken();
-            // Get access token from database
             $token = PersonalAccessToken::findToken($accessToken);
-            // Revoke token
             $token->delete();
             return response(
                 [
