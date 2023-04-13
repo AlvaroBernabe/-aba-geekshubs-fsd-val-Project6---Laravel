@@ -44,8 +44,6 @@ class PartyController extends Controller
         }
     }
 
-
-
     public function getPartyById(Request $request, $id)
     {
         try {
@@ -129,9 +127,12 @@ class PartyController extends Controller
             $partyLeave = DB::table('party_user')->where('id', '=', $id)->find($id);
             $party_userID = $partyLeave->user_id;
             if ($party_userID == $userID) {
-                echo ($userID . 'hola mundo');
                 $partyDelete = DB::table('party_user')->where('id', '=', $id)->delete($id);
                 $partyDelete;
+                return response()->json([
+                    'success' => true,
+                    'message' => "You have left the party Succesfully",
+                ]);
             } else {
                 return response()->json([
                     'success' => true,

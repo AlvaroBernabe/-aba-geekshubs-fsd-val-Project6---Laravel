@@ -225,7 +225,6 @@ class MessageController extends Controller
         }
     }
 
-
     public function updateUserMessageById(Request $request, $id)
     {
         try {
